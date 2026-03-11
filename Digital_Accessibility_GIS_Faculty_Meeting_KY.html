@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Accessibility_GIS Faculty Meeting (KY)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', Arial, sans-serif; background: #EAEEF4; min-height: 100vh; }
+    .shell { max-width: 1000px; margin: 0 auto; }
+    .tab-bar { display: flex; background: #003366; border-bottom: 3px solid #FFD200; position: sticky; top: 0; z-index: 100; }
+    .tab-btn { padding: 13px 28px; cursor: pointer; border: none; background: transparent; color: #B0C4DE; font-size: 14px; font-weight: 600; font-family: inherit; border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all 0.15s; }
+    .tab-btn.active  { color: #FFD200; background: #001f44; border-bottom-color: #FFD200; }
+    .tab-btn:hover:not(.active) { color: #fff; background: #004488; }
+    .tab-panel { display: none !important; }
+    .tab-panel.active { display: block !important; }
+
+:root {
+  --uci-blue: #003366;
+  --uci-gold: #FFD200;
+  --uci-mid: #0064A4;
+  --uci-light: #E8F2FA;
+  --green: #1A7A4A;
+  --green-light: #E6F4ED;
+  --amber: #B45309;
+  --amber-light: #FEF3C7;
+  --text: #1a1a2e;
+  --muted: #5a6070;
+  --rule: #CBD5E0;
+  --c1: #003366;
+  --c2: #0064A4;
+  --c3: #1A7A4A;
+  --c4: #6B3FA0;
+}
+
+/* ===== PRINT ===== */
+@media print {
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white; }
+  .tab-bar { display: none !important; }
+  .tab-panel { display: block !important; page-break-before: auto; }
+  .tab-panel + .tab-panel { page-break-before: always; }
+  .page { max-width: 100%; padding: 0.4in 0.5in; box-shadow: none; margin: 0; }
+  #cl-panel .page { padding-top: 0.4in; }
+  a { color: var(--uci-mid) !important; }
+  /* Checkboxes print as empty squares */
+  #cl-panel .check-box {
+    border: 2px solid #333 !important;
+    background: white !important;
+    width: 14px; height: 14px;
+  }
+  #cl-panel .check-box::after { content: "" !important; }
+  #cl-panel .item-text { text-decoration: none !important; opacity: 1 !important; }
+  #cl-panel .item { cursor: default; }
+  /* Hide progress bar in print */
+  .progress-bar-wrap, .progress-label { display: none !important; }
+  /* Prevent orphaned category headers */
+  #cl-panel .cat-header { page-break-after: avoid; }
+  #cl-panel .cat-block { page-break-inside: avoid; }
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #f4f6f9;
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.page {
+  max-width: 860px;
+  margin: 30px auto;
+  background: white;
+  padding: 48px 52px 40px;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 3px solid var(--uci-blue);
+  margin-bottom: 28px;
+  gap: 20px;
+}
+.header-left h1 {
+  font-family: 'DM Sans', sans-serif; font-weight: 800;
+  font-size: 24px;
+  color: var(--uci-blue);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.header-left p {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.deadline-badge {
+  background: var(--uci-blue);
+  color: white;
+  padding: 10px 16px;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 130px;
+}
+.deadline-badge .label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  opacity: 0.75;
+  display: block;
+  margin-bottom: 2px;
+}
+.deadline-badge .date {
+  font-family: 'DM Sans', sans-serif; font-weight: 700;
+  font-size: 18px;
+  display: block;
+  line-height: 1.2;
+}
+.deadline-badge .sub {
+  font-size: 12px;
+  opacity: 0.7;
+  display: block;
+  margin-top: 2px;
+}
+
+/* INTRO STRIP */
+.intro-strip {
+  background: var(--uci-light);
+  border-left: 4px solid var(--uci-mid);
+  padding: 12px 16px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  color: var(--uci-blue);
+}
+.intro-strip strong { font-weight: 600; }
+
+/* TWO COLUMN LAYOUT */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* SECTION */
+.section { margin-bottom: 24px; }
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--uci-mid);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* YUJA EXPLAINER */
+.yuja-box {
+  background: var(--uci-light);
+  border: 1px solid #BDD6EC;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.yuja-box h3 {
+  font-family: 'DM Sans', sans-serif; font-weight: 700;
+  font-size: 16px;
+  color: var(--uci-blue);
+  margin-bottom: 6px;
+}
+.yuja-box p {
+  font-size: 12.5px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.status-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  flex: 1;
+  justify-content: center;
+}
+.status-pill.green  { background: var(--green-light); color: var(--green); border: 1px solid #A7D7BC; }
+.status-pill.yellow { background: #FEF9C3; color: #92400E; border: 1px solid #FDE047; }
+.status-pill.red    { background: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; }
+
+/* STEP LIST */
+.step-list { list-style: none; }
+.step-list li {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+  font-size: 12.5px;
+}
+.step-num {
+  background: var(--uci-blue);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-list li strong { font-weight: 600; display: block; color: var(--uci-blue); }
+
+/* CHECKLIST (handout tab) */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  align-items: flex-start;
+}
+.check-icon {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--uci-mid);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.checklist li strong { font-weight: 600; }
+
+/* EXCEPTIONS BOX */
+.exceptions-box {
+  background: #FAFAFA;
+  border: 1px solid var(--rule);
+  padding: 14px 16px;
+}
+.exceptions-box h3 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.exceptions-box ul { list-style: none; }
+.exceptions-box ul li {
+  font-size: 12px;
+  padding: 3px 0;
+  padding-left: 14px;
+  position: relative;
+  color: var(--text);
+}
+.exceptions-box ul li::before {
+  content: "\2013";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+}
+
+/* REASSURANCE BOX */
+.reassurance {
+  background: var(--green-light);
+  border: 1px solid #A7D7BC;
+  border-left: 4px solid var(--green);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+.reassurance p {
+  font-size: 12.5px;
+  color: #14532D;
+}
+.reassurance strong { font-weight: 600; }
+
+/* RESOURCES TABLE */
+.resource-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.resource-card {
+  border: 1px solid var(--rule);
+  padding: 12px 14px;
+}
+.resource-card .res-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.resource-card .res-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--uci-blue);
+  margin-bottom: 4px;
+}
+.resource-card .res-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.resource-card a {
+  font-size: 12px;
+  color: var(--uci-mid);
+  text-decoration: none;
+  word-break: break-all;
+  font-weight: 500;
+}
+.resource-card a:hover { text-decoration: underline; }
+
+/* FOOTER */
+.footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* SKIP LINK */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--uci-blue);
+  color: white;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 100;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+.note-tag {
+  display: inline-block;
+  background: #FEE2E2;
+  color: #B91C1C;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+}
+
+/* LAW BACKGROUND */
+.law-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--rule);
+}
+.law-block {
+  padding: 12px 14px;
+  border-right: 1px solid var(--rule);
+}
+.law-block:last-child { border-right: none; }
+.law-block .law-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--uci-mid);
+  margin-bottom: 4px;
+}
+.law-block .law-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--uci-blue);
+  margin-bottom: 3px;
+}
+.law-block .law-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* HOW-TO TOOL CARDS */
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.tool-card {
+  border: 1px solid var(--rule);
+  padding: 12px 14px;
+}
+.tool-card .tool-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--uci-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--uci-light);
+}
+.tool-steps { list-style: none; }
+.tool-steps li {
+  font-size: 12px;
+  color: var(--text);
+  padding: 3px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+.tool-steps li::before {
+  content: "\2192";
+  position: absolute;
+  left: 0;
+  color: var(--uci-mid);
+  font-size: 12px;
+  top: 4px;
+}
+.tool-steps li strong { color: var(--uci-blue); font-weight: 600; }
+
+/* ======================================================
+   CHECKLIST TAB — INTERACTIVE CHECKBOX STYLES
+   ====================================================== */
+#cl-panel .page {
+  max-width: 860px;
+  margin: 30px auto;
+  background: white;
+  padding: 48px 52px 40px;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+}
+
+/* Category blocks */
+#cl-panel .cat-block { margin-bottom: 16px; }
+#cl-panel .cat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 13px;
+  color: white;
+}
+#cl-panel .cat-num {
+  width: 22px; height: 22px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+#cl-panel .cat-title { font-size: 14px; font-weight: 700; flex: 1; }
+#cl-panel .cat-1 .cat-header { background: var(--c1); }
+#cl-panel .cat-2 .cat-header { background: var(--c2); }
+#cl-panel .cat-3 .cat-header { background: var(--c3); }
+#cl-panel .cat-4 .cat-header { background: var(--c4); }
+
+/* Items */
+#cl-panel .items-wrap { border: 1px solid var(--rule); border-top: none; }
+#cl-panel .item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 8px 13px;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+}
+#cl-panel .item:last-child { border-bottom: none; }
+#cl-panel .item:nth-child(even) { background: #FAFBFC; }
+#cl-panel .item:hover { background: #F0F4F8; }
+
+/* Hidden native checkbox */
+#cl-panel .check-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Visual checkbox */
+#cl-panel .check-box {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--c1);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  position: relative;
+}
+#cl-panel .check-box::after {
+  content: "";
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+/* Checked state */
+#cl-panel .check-input:checked + .check-box {
+  border-color: var(--c1);
+  background: var(--c1);
+}
+#cl-panel .check-input:checked + .check-box::after { content: "\2713"; }
+#cl-panel .check-input:checked ~ .item-body .item-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+  transition: all 0.15s;
+}
+
+/* Focus visible for keyboard nav */
+#cl-panel .check-input:focus-visible + .check-box {
+  outline: 2px solid var(--uci-mid);
+  outline-offset: 2px;
+}
+
+/* Category-specific checkbox colors */
+#cl-panel .cat-1 .check-box { border-color: var(--c1); }
+#cl-panel .cat-2 .check-box { border-color: var(--c2); }
+#cl-panel .cat-3 .check-box { border-color: var(--c3); }
+#cl-panel .cat-4 .check-box { border-color: var(--c4); }
+#cl-panel .cat-1 .check-input:checked + .check-box { background: var(--c1); border-color: var(--c1); }
+#cl-panel .cat-2 .check-input:checked + .check-box { background: var(--c2); border-color: var(--c2); }
+#cl-panel .cat-3 .check-input:checked + .check-box { background: var(--c3); border-color: var(--c3); }
+#cl-panel .cat-4 .check-input:checked + .check-box { background: var(--c4); border-color: var(--c4); }
+
+#cl-panel .cat-1 .item-note { color: var(--c1); }
+#cl-panel .cat-2 .item-note { color: var(--c2); }
+#cl-panel .cat-3 .item-note { color: var(--c3); }
+#cl-panel .cat-4 .item-note { color: var(--c4); }
+
+#cl-panel .item-body { flex: 1; }
+#cl-panel .item-text { font-size: 12.5px; color: var(--text); line-height: 1.5; }
+#cl-panel .item-text strong { font-weight: 600; }
+#cl-panel .item-note { font-size: 11px; margin-top: 2px; font-style: italic; opacity: 0.85; }
+
+/* Progress bar */
+.progress-bar-wrap {
+  background: #E2E8F0;
+  height: 6px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3));
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+.progress-label {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" id="btn-handout" role="tab" aria-selected="true" aria-controls="ho-panel" onclick="show('handout')">&#128196; &nbsp;Handout</button>
+    <button class="tab-btn" id="btn-checklist" role="tab" aria-selected="false" aria-controls="cl-panel" onclick="show('checklist')">&#9989; &nbsp;Self-Check Checklist</button>
+  </div>
+
+  <!-- ============================================================
+       TAB 1 — HANDOUT
+       ============================================================ -->
+  <div class="tab-panel active" id="ho-panel" role="tabpanel" aria-labelledby="btn-handout">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="page">
+      <main id="main-content">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-left">
+          <h1>Digital Accessibility:<br><span style="font-size:0.82em;font-weight:700;">A Starting Point for GIS Faculty</span></h1>
+          <p>UC IRVINE &middot; GIS FACULTY MEETING &middot; MARCH 11, 2026</p>
+        </div>
+        <div class="deadline-badge">
+          <span class="label">Compliance Deadline</span>
+          <span class="date">April 24,<br>2026</span>
+        </div>
+      </div>
+
+      <!-- INTRO -->
+      <div class="intro-strip">
+        With limited exceptions, digital materials made available to students online &mdash; including Canvas content, PDFs, slides, videos, and documents &mdash; should be accessible. This is a starting point: what I've gathered from several workshops and resources. It's not complete, and it won't be perfect, but it's a baseline we can build on together!
+      </div>
+
+      <!-- LAW BACKGROUND -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">The Legal Context</div>
+        <div class="law-strip">
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">The Federal Law</div>
+            <div class="law-val">ADA Title II</div>
+            <div class="law-desc">The Americans with Disabilities Act requires public universities to make all digital content accessible. A 2024 DOJ final rule clarified specific accessibility requirements for the web content and digital materials of public entities &mdash; with significant implications for online course materials, documents, and instructional content.</div>
+          </div>
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">The Standard</div>
+            <div class="law-val">WCAG 2.1 Level AA</div>
+            <div class="law-desc">Web Content Accessibility Guidelines &mdash; the international benchmark for accessible digital content. Covers Canvas materials: documents, slides, videos, and websites. <em>Note: WCAG 2.2 is the current version, but the DOJ and UC policy currently reference 2.1 AA as the required baseline.</em></div>
+          </div>
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">UCI's Internal Policy</div>
+            <div class="law-val">UC IMT-1300</div>
+            <div class="law-desc">The long-standing UC system-wide policy requiring all UC institutions to meet WCAG 2.1 AA. The 2026 DOJ deadline is now accelerating enforcement across all campuses.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YUJA SECTION -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">YuJa Panorama &mdash; Check What's Already in Canvas</div>
+        <div class="yuja-box">
+          <h3>What is YuJa Panorama?</h3>
+          <p>YuJa Panorama is an accessibility platform integrated with Canvas that automatically scans your course files and flags accessibility issues. It displays <strong>color-coded indicators</strong> next to files and generates reports that help you fix problems &mdash; some right inside Canvas. It also automatically generates alternative formats for students (audio, HTML, tagged PDF), improving access without requiring additional work from you.</p>
+          <div class="status-row">
+            <div class="status-pill green">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;">
+                <circle cx="12" cy="12" r="11.5" stroke="#1A7A4A" stroke-width="1.3" fill="#E6F4ED"/>
+                <circle cx="12" cy="6.2" r="1.7" fill="#1A7A4A"/>
+                <path d="M12 8.2 L12 14.5" stroke="#1A7A4A" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M8.5 10.5 L12 9.5 L15.5 10.5" stroke="#1A7A4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 14.5 L9.5 18.5" stroke="#1A7A4A" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 14.5 L14.5 18.5" stroke="#1A7A4A" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <strong>Green</strong> = Accessible. No action needed.
+            </div>
+            <div class="status-pill yellow">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;">
+                <circle cx="12" cy="12" r="11.5" stroke="#92400E" stroke-width="1.3" fill="#FEF9C3"/>
+                <circle cx="12" cy="6.2" r="1.7" fill="#92400E"/>
+                <path d="M12 8.2 L12 14.5" stroke="#92400E" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M8.5 10.5 L12 9.5 L15.5 10.5" stroke="#92400E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 14.5 L9.5 18.5" stroke="#92400E" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 14.5 L14.5 18.5" stroke="#92400E" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <strong>Yellow</strong> = Some issues. Fix after red items.
+            </div>
+            <div class="status-pill red">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;">
+                <circle cx="12" cy="12" r="11.5" stroke="#B91C1C" stroke-width="1.3" fill="#FEE2E2"/>
+                <circle cx="12" cy="6.2" r="1.7" fill="#B91C1C"/>
+                <path d="M12 8.2 L12 14.5" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M8.5 10.5 L12 9.5 L15.5 10.5" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 14.5 L9.5 18.5" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 14.5 L14.5 18.5" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <strong>Red</strong> = Significant issues. Fix these first.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TWO COLUMN -->
+      <div class="two-col">
+
+        <!-- LEFT: WORKFLOW -->
+        <div class="section">
+          <div class="section-title" role="heading" aria-level="2">How to Fix Issues in YuJa Panorama</div>
+          <ol class="step-list">
+            <li>
+              <span class="step-num">1</span>
+              <div><strong>Open your Canvas course</strong> Look for the colored circles next to your files. Start with the red ones.</div>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <div><strong>Click &rarr; View &rarr; Fix Issue</strong> YuJa Panorama walks you through each problem one by one, right inside Canvas.</div>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <div><strong>Fix simple issues in YuJa Panorama</strong> Alt text for images, slide titles, link text, color contrast &mdash; all fixable in-place.</div>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <div><strong>Complex issues? Contact DASH</strong> Submit a request form; they handle the harder stuff &mdash; complex PDFs, scanned documents, OCR.</div>
+            </li>
+            <li>
+              <span class="step-num">5</span>
+              <div><strong>100% green = YuJa Panorama has no further flags</strong> YuJa Panorama is your final check. Green across the board means no further flags.</div>
+            </li>
+          </ol>
+        </div>
+
+        <!-- RIGHT: CHECKLIST -->
+        <div class="section">
+          <div class="section-title" role="heading" aria-level="2">Most Common Issues to Fix</div>
+          <ul class="checklist">
+            <li><span class="check-icon"></span><div><strong>Images without Alt Text</strong><br>Add a brief description of what the image shows. Decorative images? Mark as &ldquo;decorative&rdquo; &mdash; screen readers will skip them.</div></li>
+            <li><span class="check-icon"></span><div><strong>Missing Slide Titles</strong><br>Every slide needs a title (can be hidden) so screen readers can navigate between them.</div></li>
+            <li><span class="check-icon"></span><div><strong>Vague Link Text</strong><br>&ldquo;Click here&rdquo; &rarr; use descriptive text like &ldquo;Download Week 3 Readings.&rdquo;</div></li>
+            <li><span class="check-icon"></span><div><strong>PDFs without Tags</strong><br>Use Adobe Pro's &ldquo;Prepare for Accessibility&rdquo; auto-tag feature, then re-upload to Canvas.</div></li>
+            <li><span class="check-icon"></span><div><strong>Videos without Captions</strong><br>Auto-captions can be a starting point, but always review for accuracy. For lecture recordings, use YuJa's caption editor to review and correct captions.</div></li>
+            <li><span class="check-icon"></span><div><strong>Low Color Contrast</strong><br>YuJa Panorama flags text that's hard to read and lets you pick an accessible color right in Canvas.</div></li>
+          </ul>
+        </div>
+
+        <!-- EXCEPTIONS -->
+        <div class="section">
+          <div class="section-title" role="heading" aria-level="2">Lower-Priority &amp; Potential Exceptions</div>
+          <div class="exceptions-box">
+            <h3>Potential exceptions &mdash; context-dependent, check campus guidance</h3>
+            <ul>
+              <li>Clearly archived content kept only for reference or recordkeeping (not actively used for teaching)</li>
+              <li>Files not uploaded to Canvas (shown in class only)</li>
+              <li>Some unaffiliated third-party content &mdash; <em>but not content provided through a university contract or licensing arrangement</em></li>
+              <li>Content published before the April 24, 2026 deadline that is no longer active</li>
+              <li>Individualized, password-protected documents specific to a single person</li>
+            </ul>
+            <p style="font-size:12px;color:var(--amber);margin-top:8px;background:#FEF3C7;padding:7px 10px;border-radius:4px;border-left:3px solid #F59E0B;"><span class="note-tag">Important</span> Past-quarter materials still accessible to students in Canvas are considered <em>active</em>, not archived &mdash; and are in scope. If you don't want them in scope, remove them from Canvas or restrict access.</p>
+          </div>
+        </div>
+
+        <!-- REASSURANCE -->
+        <div class="section">
+          <div class="section-title" role="heading" aria-level="2">A Few Things Worth Knowing</div>
+          <div class="reassurance">
+            <p><strong>Accessibility vs. Accommodation:</strong> Accessibility is proactive course design for everyone; accommodations are individualized adjustments for specific students. Both matter &mdash; but they're different obligations.<br><br><strong>The expectation is not instant perfection.</strong> What matters is taking reasonable, documented steps to improve accessibility &mdash; especially for materials actively in use. Schools that faced legal action did so because they refused to act, not because they were imperfect.</p>
+          </div>
+        </div>
+
+      </div><!-- end two-col -->
+
+      <!-- HOW-TO TOOLS -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">Starting Fresh &mdash; Built-In Tools in Word, PowerPoint &amp; Adobe</div>
+        <div class="tool-grid">
+
+          <div class="tool-card">
+            <div class="tool-name" role="heading" aria-level="3"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;">
+              <circle cx="11" cy="11" r="10.5" stroke="#B91C1C" stroke-width="1.2" fill="#FEE2E2"/>
+              <circle cx="11" cy="6.5" r="1.8" fill="#B91C1C"/>
+              <path d="M8 10h6M11 10v5.5M9 15.5l2-2 2 2" stroke="#B91C1C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg> YuJa Panorama &mdash; Canvas</div>
+            <ul class="tool-steps">
+              <li>Open your Canvas course</li>
+              <li>Look for <strong>colored circles</strong> next to each file</li>
+              <li>Click a red circle &rarr; <strong>View</strong></li>
+              <li>Click <strong>Fix Issue</strong> on each item</li>
+              <li>For images: add alt text or mark as <strong>Decorative</strong></li>
+              <li>For slides: add or set a <strong>Slide Title</strong></li>
+              <li>For links: replace &ldquo;click here&rdquo; with descriptive text</li>
+              <li>When everything is green &rarr; <strong>done</strong></li>
+            </ul>
+            <p style="font-size:11.5px;color:#5a6070;margin-top:8px;line-height:1.5;"><strong>Important:</strong> These categories are narrow and context-dependent. If the material is actively used for teaching or student access, treat it as in scope.</p>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-name" role="heading" aria-level="3">&#128202; PowerPoint</div>
+            <ul class="tool-steps">
+              <li>Open your .pptx file</li>
+              <li>Click <strong>Review</strong> tab in the top menu</li>
+              <li>Click <strong>Check Accessibility</strong></li>
+              <li>Panel opens on the right with a list of issues</li>
+              <li>Click each issue &rarr; it takes you directly to the problem</li>
+              <li>Right-click any image &rarr; <strong>Edit Alt Text</strong></li>
+              <li>Add a slide title via <strong>View &rarr; Outline View</strong></li>
+              <li>Fix <strong>Reading Order</strong>: Review &rarr; Check Accessibility &rarr; Reading Order Pane</li>
+              <li>Re-upload to Canvas when done</li>
+            </ul>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-name" role="heading" aria-level="3">&#128196; Word &amp; Adobe PDF</div>
+            <ul class="tool-steps">
+              <li><strong>Word:</strong> Review tab &rarr; <strong>Check Accessibility</strong></li>
+              <li>Use <strong>Heading styles</strong> (H1, H2) &mdash; not just bold text</li>
+              <li>Add alt text to all images (right-click &rarr; Edit Alt Text)</li>
+              <li>Use descriptive hyperlink text, not bare URLs</li>
+              <li>Export as PDF: <strong>Save As &rarr; PDF</strong> (preserves tags)</li>
+              <li><strong>Adobe Acrobat Pro:</strong> All Tools &rarr; <strong>Prepare for Accessibility</strong></li>
+              <li>Click <strong>Autotag Document</strong> &mdash; runs automatically</li>
+              <li>Then add alt text to any flagged images</li>
+              <li>Upload the tagged PDF to Canvas</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- UDL + DESIGN TIPS -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">Font, Color &amp; Design &mdash; Quick Reference</div>
+        <div class="law-strip">
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">Font</div>
+            <div class="law-val" style="font-size:14px;">Sans-serif, 12pt+</div>
+            <div class="law-desc">Use Arial, Calibri, Aptos, or Helvetica &mdash; all standard sans-serif fonts. Avoid decorative fonts (e.g., cursive or handwriting-style). Body text minimum 12pt. Headings should be bold and clearly distinct from body text.</div>
+          </div>
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">Color &amp; Contrast</div>
+            <div class="law-val" style="font-size:14px;">4.5:1 minimum ratio</div>
+            <div class="law-desc">Never use color alone to convey meaning &mdash; e.g., marking a deadline only in red text. Color alone doesn't carry meaning for everyone &mdash; different ways of seeing color, grayscale printing, and low-contrast screens all affect how content reads. Always pair color with bold text or an icon (&#9888;&#65039;). YuJa Panorama and PowerPoint's checker will flag contrast issues automatically.</div>
+          </div>
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">Universal Design for Learning (UDL)</div>
+            <div class="law-desc">Explore the UDL framework: <a href="https://udlguidelines.cast.org" target="_blank" aria-label="CAST UDL Guidelines website">udlguidelines.cast.org</a> and UCI's own guide at <a href="https://dtei.uci.edu/resources/how-to/accessibility/" target="_blank" aria-label="UCI DTEI Inclusive Teaching page">dtei.uci.edu/resources/how-to/accessibility</a>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESOURCES -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">UCI Resources &amp; Support</div>
+        <div class="resource-grid">
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#128736; Direct Support</div>
+            <div class="res-title">DASH Team</div>
+            <div class="res-desc">UCI's digital accessibility team. 1-on-1 consultations (virtual and in-person), and they can remediate your Canvas course for you after an initial consult.</div>
+            <a href="https://dtei.uci.edu/dash/" class="res-link" target="_blank">dtei.uci.edu/dash</a>
+          </div>
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#128214; Teaching Guide</div>
+            <div class="res-title">DTEI Accessibility Teaching Guide</div>
+            <div class="res-desc">Step-by-step guide for making Canvas courses, documents, slides, and videos accessible. Covers screen reader basics and UDL principles.</div>
+            <a href="https://dtei.uci.edu/resources/how-to/accessibility/" class="res-link" target="_blank">dtei.uci.edu/resources/how-to/accessibility</a>
+          </div>
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#128197; Workshops</div>
+            <div class="res-title">Practical Accessibility: Basics You Can Apply Today</div>
+            <div class="res-desc">Free UC-wide webinars on making digital content accessible.<br><strong>Mar 19</strong> &mdash; Practical Accessibility: Video and Zoom (Brian McNeilly, UCOP, 3&ndash;4pm)<br><strong>Mar 25</strong> &mdash; Practical Accessibility: Canvas LMS (Rolin Moe, UCOP, 2&ndash;3pm)<br><strong>Apr 2</strong> &mdash; Practical Accessibility: Presentations and Visual Aids (Brian McNeilly, UCOP, 12&ndash;1pm)</div>
+            <a href="https://uctechnews.ucop.edu/practical-accessibility-webinar-series/" class="res-link" target="_blank">uctechnews.ucop.edu/practical-accessibility-webinar-series</a>
+          </div>
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#127891; Self-Paced Training</div>
+            <div class="res-title">AccessibiliTrees (Canvas)</div>
+            <div class="res-desc">UCI's three-level badging program. Work through accessibility skills at your own pace and earn a badge at each level.</div>
+            <a href="https://accessibility.uci.edu" class="res-link" target="_blank">accessibility.uci.edu</a>
+          </div>
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#128269; Scanning Tool</div>
+            <div class="res-title">Siteimprove</div>
+            <div class="res-desc">Free for all UCI faculty and staff. Scans your Canvas content or website every 5 days and gives you a list of issues to fix.</div>
+            <a href="https://www.oit.uci.edu/accessibility-resources/" class="res-link" target="_blank">oit.uci.edu/accessibility-resources</a>
+          </div>
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#129504; Neurodiversity</div>
+            <div class="res-title">Faculty Resource Guide for Neurodivergent Learners</div>
+            <div class="res-desc">Course self-assessment across 5 areas: syllabus, formatting, activities, classroom environment, and communication. Use as a PDF checklist or interactively with an AI tool (Gemini, ZotGPT).</div>
+            <a href="https://sites.google.com/view/uci-neurodiversity/home" class="res-link" target="_blank">sites.google.com/view/uci-neurodiversity/home</a>
+          </div>
+
+          <div class="resource-card">
+            <div class="res-label" role="heading" aria-level="3">&#128203; Policy</div>
+            <div class="res-title">UCI Accessibility + ADA Title II</div>
+            <div class="res-desc">UCI's central page for ADA Title II information, WCAG guidelines, exceptions, and campus-specific guidance.</div>
+            <a href="https://accessibility.uci.edu/ada-title-ii/" class="res-link" target="_blank">accessibility.uci.edu/ada-title-ii</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SOURCES & ACKNOWLEDGMENTS FOOTER -->
+      <div class="footer">
+        <div style="width:100%;margin-bottom:6px;font-size:12.5px;color:#5a6070;font-weight:600;border-top:1px solid #C8D4E0;padding-top:8px;">
+          Prepared by Ka-eul Yoo &middot; Global &amp; International Studies &middot; GIS Faculty Meeting &middot; March 11, 2026
+        </div>
+        <div style="width:100%;font-size:10.5px;color:#7a8090;">
+          <strong>Sources &amp; Acknowledgments:</strong>
+          <br>1. UCI Digital Humanities Exchange (DHX) Workshop: <em>Digital Accessibility for Humanities Teaching and Research Communication</em> &mdash; Amalia Herrmann, Humanities Core, UCI
+          <br>2. DTEI DASH Team, UCI (1-on-1 consultation)
+          <br>3. UC Practical Accessibility Webinar: <em>Practical Accessibility: Documents and PDFs</em> &mdash; Brian McNeilly, Web Accessibility Specialist, UCOP
+        </div>
+      </div>
+
+      </main><!-- /main-content -->
+    </div><!-- /page -->
+  </div><!-- /ho-panel -->
+
+  <!-- ============================================================
+       TAB 2 — SELF-CHECK CHECKLIST (interactive)
+       ============================================================ -->
+  <div class="tab-panel" id="cl-panel" role="tabpanel" aria-labelledby="btn-checklist">
+    <div class="page">
+
+      <a href="#cl-main" style="position:absolute;top:-40px;left:0;background:#003366;color:white;padding:5px 10px;font-size:12px;z-index:100;text-decoration:none;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to checklist</a>
+
+      <div class="header">
+        <div class="header-left">
+          <h1>Digital Accessibility Self-Check</h1>
+          <p>UC IRVINE &middot; GIS FACULTY MEETING &middot; MARCH 11, 2026</p>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-label">
+        <span id="progress-text">0 of 20 checked</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+
+      <main id="cl-main">
+
+      <!-- 1. SYLLABUS -->
+      <div class="cat-block cat-1" role="region" aria-labelledby="cat1">
+        <div class="cat-header">
+          <div class="cat-num" aria-hidden="true">1</div>
+          <div class="cat-title" id="cat1">Syllabus</div>
+        </div>
+        <div class="items-wrap">
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="s1">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Includes a disability support statement</strong> directing students to contact DSC for accommodations.</div>
+              <div class="item-note">Example: <a href="https://dsc.uci.edu/faculty-staff/" target="_blank" style="color:var(--c1);" onclick="event.stopPropagation()">dsc.uci.edu/faculty-staff</a></div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="s2">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Uploaded as Word (.docx) or HTML</strong> &mdash; not a scanned image. Text must be selectable and copyable.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="s3">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Uses proper Heading styles</strong> (H1 &rarr; H2 &rarr; H3) &mdash; not just bold text. Allows screen readers to navigate by section.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="s4">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>All links use descriptive text</strong> &mdash; not &ldquo;click here&rdquo; or raw URLs. Example: &ldquo;Download the course schedule.&rdquo;</div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- 2. READINGS & DOCUMENTS -->
+      <div class="cat-block cat-2" role="region" aria-labelledby="cat2">
+        <div class="cat-header">
+          <div class="cat-num" aria-hidden="true">2</div>
+          <div class="cat-title" id="cat2">Course Readings &amp; Documents</div>
+        </div>
+        <div class="items-wrap">
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="r1">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Text is selectable</strong> &mdash; you can highlight and copy it. If not, the file needs OCR processing.</div>
+              <div class="item-note">Free OCR: <a href="https://www.sensusaccess.com" target="_blank" style="color:var(--c2);" onclick="event.stopPropagation()">sensusaccess.com</a> (UCI-provided) &middot; <a href="https://www.onlineocr.net" target="_blank" style="color:var(--c2);" onclick="event.stopPropagation()">onlineocr.net</a> (free) &middot; or contact DASH</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="r2">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>PDF is tagged</strong> &mdash; headings, paragraphs, and images are labeled so screen readers can navigate. Use Adobe Acrobat Pro &rarr; All Tools &rarr; Prepare for Accessibility &rarr; Autotag.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="r3">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Images have alt text</strong> &mdash; a brief description of what the image shows. Purely decorative images can be marked to skip.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="r4">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Third-party PDFs (JSTOR, library databases)</strong> &mdash; check if text is selectable. If not, contact DASH or ask the library for an accessible version. <em>Note: content provided through a university contract or licensing arrangement is not automatically exempt.</em></div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- 3. SLIDES -->
+      <div class="cat-block cat-3" role="region" aria-labelledby="cat3">
+        <div class="cat-header">
+          <div class="cat-num" aria-hidden="true">3</div>
+          <div class="cat-title" id="cat3">Lecture Slides (PowerPoint)</div>
+        </div>
+        <div class="items-wrap">
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p1">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Run built-in Accessibility Checker</strong> &mdash; Review tab &rarr; Check Accessibility. Fix everything flagged before uploading.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p2">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Every slide has a title</strong> &mdash; lets screen readers jump between slides. Titles can be hidden visually if preferred.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p3">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Images have alt text or are marked decorative</strong> &mdash; right-click any image &rarr; Edit Alt Text.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p4">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Reading order is logical</strong> &mdash; screen readers follow the order elements were added. Check via PowerPoint &rarr; Review &rarr; Reading Order pane.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p5">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Color contrast is sufficient</strong> &mdash; minimum 4.5:1 ratio for body text. Color alone doesn't carry meaning for everyone &mdash; pair color with bold text or an icon.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p6">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Text is actual text, not in images</strong> &mdash; if a slide contains a screenshot of a quote, extract and paste as real text.</div>
+              <div class="item-note">Free OCR: <a href="https://www.sensusaccess.com" target="_blank" style="color:var(--c3);" onclick="event.stopPropagation()">sensusaccess.com</a> (UCI-provided) &middot; <a href="https://www.onlineocr.net" target="_blank" style="color:var(--c3);" onclick="event.stopPropagation()">onlineocr.net</a> (free) &middot; or contact DASH</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="p7">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Check in YuJa Panorama after uploading</strong> &mdash; open Canvas, look for color-coded indicators next to files. Click &rarr; View &rarr; Fix Issue. Green = no further flags.</div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- 4. CANVAS SITE -->
+      <div class="cat-block cat-4" role="region" aria-labelledby="cat4">
+        <div class="cat-header">
+          <div class="cat-num" aria-hidden="true">4</div>
+          <div class="cat-title" id="cat4">Canvas Site</div>
+        </div>
+        <div class="items-wrap">
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="c1">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Canvas pages use Heading styles</strong> &mdash; in the Canvas text editor, use the Paragraph dropdown to select Heading 2, Heading 3, etc.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="c2">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>All links use descriptive text</strong> &mdash; &ldquo;Week 3 Reading: Kim (2020)&rdquo; instead of &ldquo;click here&rdquo; or a full URL.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="c3">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Videos have captions or transcripts</strong> &mdash; Zoom auto-transcripts, YuJa's caption editor, or YouTube auto-captions &mdash; always review for accuracy.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="c4">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Images have alt text</strong> &mdash; when inserting an image in the Canvas editor, fill in the alt text field.</div>
+            </div>
+          </label>
+
+          <label class="item">
+            <input type="checkbox" class="check-input" data-id="c5">
+            <span class="check-box"></span>
+            <div class="item-body">
+              <div class="item-text"><strong>Module structure is clear</strong> &mdash; clear labels, logical order, no broken links.</div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      </main><!-- /cl-main -->
+
+      <div class="footer">
+        <div style="width:100%;margin-bottom:6px;font-size:12.5px;color:#5a6070;font-weight:600;border-top:1px solid #C8D4E0;padding-top:8px;">
+          Prepared by Ka-eul Yoo &middot; Global &amp; International Studies &middot; GIS Faculty Meeting &middot; March 11, 2026
+        </div>
+        <div style="width:100%;font-size:10.5px;color:#7a8090;">
+          <strong>Sources &amp; Acknowledgments:</strong>
+          <br>1. UCI Digital Humanities Exchange (DHX) Workshop: <em>Digital Accessibility for Humanities Teaching and Research Communication</em> &mdash; Amalia Herrmann, Humanities Core, UCI
+          <br>2. DTEI DASH Team, UCI (1-on-1 consultation)
+          <br>3. UC Practical Accessibility Webinar: <em>Practical Accessibility: Documents and PDFs</em> &mdash; Brian McNeilly, Web Accessibility Specialist, UCOP
+        </div>
+      </div>
+
+    </div><!-- /page -->
+  </div><!-- /cl-panel -->
+
+</div><!-- /shell -->
+
+<script>
+  /* Tab switching */
+  function show(tab) {
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+    document.getElementById(tab === 'handout' ? 'ho-panel' : 'cl-panel').classList.add('active');
+    document.getElementById('btn-' + tab).classList.add('active');
+    document.getElementById('btn-' + tab).setAttribute('aria-selected','true');
+  }
+
+  /* Checkbox persistence + progress */
+  (function() {
+    var STORAGE_KEY = 'gis-a11y-checklist';
+    var boxes = document.querySelectorAll('#cl-panel .check-input');
+    var total = boxes.length;
+
+    function loadState() {
+      try {
+        var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        boxes.forEach(function(cb) {
+          if (saved[cb.dataset.id]) cb.checked = true;
+        });
+      } catch(e) { /* silent */ }
+    }
+
+    function saveState() {
+      var state = {};
+      boxes.forEach(function(cb) {
+        if (cb.checked) state[cb.dataset.id] = true;
+      });
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { /* silent */ }
+    }
+
+    function updateProgress() {
+      var checked = document.querySelectorAll('#cl-panel .check-input:checked').length;
+      var pct = Math.round((checked / total) * 100);
+      document.getElementById('progress-text').textContent = checked + ' of ' + total + ' checked';
+      document.getElementById('progress-pct').textContent = pct + '%';
+      document.getElementById('progress-fill').style.width = pct + '%';
+    }
+
+    loadState();
+    updateProgress();
+
+    boxes.forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        saveState();
+        updateProgress();
+      });
+    });
+  })();
+</script>
+</body>
+</html>
