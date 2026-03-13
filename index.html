@@ -635,6 +635,14 @@ body {
         <br><br><em style="font-size:12px;">Note: This guide reflects my own synthesis of available resources and may not capture every detail &mdash; for official policy, refer to <a href="https://accessibility.uci.edu" target="_blank" style="color:var(--uci-mid);font-weight:500;">UCI Accessibility Hub</a>.</em>
       </div>
 
+      <!-- A FEW THINGS WORTH KNOWING -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">A Few Things Worth Knowing</div>
+        <div class="reassurance">
+          <p><strong>Accessibility vs. Accommodation:</strong> Accessibility is proactive course design for everyone; accommodations are individualized adjustments for specific students. Both matter &mdash; but they're different obligations.<br><br><strong>The expectation is not instant perfection.</strong> What matters is taking reasonable, documented steps to improve accessibility &mdash; especially for materials actively in use. Schools that faced legal action historically did so because they refused to act, not because they were imperfect.</p>
+        </div>
+      </div>
+
       <!-- LAW BACKGROUND -->
       <div class="section">
         <div class="section-title" role="heading" aria-level="2">The Legal Context</div>
@@ -654,6 +662,22 @@ body {
             <div class="law-val">UC IMT-1300</div>
             <div class="law-desc">The long-standing UC system-wide policy requiring all UC institutions to meet WCAG 2.1 AA. The 2026 DOJ deadline is now accelerating compliance efforts across all campuses.</div>
           </div>
+        </div>
+      </div>
+
+      <!-- EXCEPTIONS -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">Lower-Priority &amp; Potential Exceptions</div>
+        <div class="exceptions-box">
+          <h3>Potential exceptions &mdash; context-dependent, check campus guidance</h3>
+          <ul>
+            <li>Clearly archived content kept only for reference or recordkeeping (not actively used for teaching)</li>
+            <li>Files not uploaded to Canvas (shown in class only)</li>
+            <li>Some unaffiliated third-party content &mdash; <em>but not content provided through a university contract or licensing arrangement</em></li>
+            <li>Content published before the April 24, 2026 deadline that is no longer active</li>
+            <li>Individualized, password-protected documents specific to a single person</li>
+          </ul>
+          <p style="font-size:12px;color:var(--amber);margin-top:8px;background:#FEF3C7;padding:7px 10px;border-radius:4px;border-left:3px solid #F59E0B;"><span class="note-tag">Important</span> Past-quarter materials still accessible to students in Canvas are considered <em>active</em>, not archived &mdash; and are in scope. If you don't want them in scope, remove them from Canvas or restrict access.</p>
         </div>
       </div>
 
@@ -706,7 +730,7 @@ body {
 
         <!-- LEFT: WORKFLOW -->
         <div class="section">
-          <div class="section-title" role="heading" aria-level="2">How to Fix Issues in YuJa Panorama</div>
+          <div class="section-title" role="heading" aria-level="2">Fixing Issues with YuJa Panorama</div>
           <ol class="step-list">
             <li>
               <span class="step-num">1</span>
@@ -744,31 +768,28 @@ body {
           </ul>
         </div>
 
-        <!-- EXCEPTIONS -->
-        <div class="section">
-          <div class="section-title" role="heading" aria-level="2">Lower-Priority &amp; Potential Exceptions</div>
-          <div class="exceptions-box">
-            <h3>Potential exceptions &mdash; context-dependent, check campus guidance</h3>
-            <ul>
-              <li>Clearly archived content kept only for reference or recordkeeping (not actively used for teaching)</li>
-              <li>Files not uploaded to Canvas (shown in class only)</li>
-              <li>Some unaffiliated third-party content &mdash; <em>but not content provided through a university contract or licensing arrangement</em></li>
-              <li>Content published before the April 24, 2026 deadline that is no longer active</li>
-              <li>Individualized, password-protected documents specific to a single person</li>
-            </ul>
-            <p style="font-size:12px;color:var(--amber);margin-top:8px;background:#FEF3C7;padding:7px 10px;border-radius:4px;border-left:3px solid #F59E0B;"><span class="note-tag">Important</span> Past-quarter materials still accessible to students in Canvas are considered <em>active</em>, not archived &mdash; and are in scope. If you don't want them in scope, remove them from Canvas or restrict access.</p>
-          </div>
-        </div>
-
-        <!-- REASSURANCE -->
-        <div class="section">
-          <div class="section-title" role="heading" aria-level="2">A Few Things Worth Knowing</div>
-          <div class="reassurance">
-            <p><strong>Accessibility vs. Accommodation:</strong> Accessibility is proactive course design for everyone; accommodations are individualized adjustments for specific students. Both matter &mdash; but they're different obligations.<br><br><strong>The expectation is not instant perfection.</strong> What matters is taking reasonable, documented steps to improve accessibility &mdash; especially for materials actively in use. Schools that faced legal action historically did so because they refused to act, not because they were imperfect.</p>
-          </div>
-        </div>
-
       </div><!-- end two-col -->
+
+      <!-- UDL + DESIGN TIPS -->
+      <div class="section">
+        <div class="section-title" role="heading" aria-level="2">Font, Color &amp; Design &mdash; Quick Reference</div>
+        <div class="law-strip">
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">Font</div>
+            <div class="law-val" style="font-size:14px;">Sans-serif fonts</div>
+            <div class="law-desc">WCAG does not mandate specific fonts or minimum font sizes for digital documents. However, common accessibility guidelines recommend using sans-serif fonts (e.g., Arial, Calibri, Aptos, Helvetica) for readability, avoiding decorative or cursive fonts, and using 12&ndash;14pt for Word documents and PDFs and 18&ndash;24pt for PowerPoint slides (larger when projected). Headings should be bold and clearly distinct from body text.</div>
+          </div>
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">Color &amp; Contrast</div>
+            <div class="law-val" style="font-size:14px;">4.5:1 minimum ratio</div>
+            <div class="law-desc">Never use color alone to convey meaning &mdash; e.g., marking a deadline only in red text. Color alone doesn't carry meaning for everyone &mdash; different ways of seeing color, grayscale printing, and low-contrast screens all affect how content reads. Always pair color with bold text or an icon (&#9888;&#65039;). YuJa Panorama and PowerPoint's checker will flag contrast issues automatically.</div>
+          </div>
+          <div class="law-block">
+            <div class="law-label" role="heading" aria-level="3">Universal Design for Learning (UDL)</div>
+            <div class="law-desc">Explore the UDL framework: <a href="https://udlguidelines.cast.org" target="_blank" aria-label="CAST UDL Guidelines website">CAST UDL Guidelines</a> and UCI's own guide at <a href="https://dtei.uci.edu/resources/how-to/accessibility/" target="_blank" aria-label="UCI DTEI Inclusive Teaching page">DTEI Accessibility Teaching Guide</a>.</div>
+          </div>
+        </div>
+      </div>
 
       <!-- HOW-TO TOOLS -->
       <div class="section">
@@ -849,27 +870,6 @@ body {
             </ul>
           </div>
 
-        </div>
-      </div>
-
-      <!-- UDL + DESIGN TIPS -->
-      <div class="section">
-        <div class="section-title" role="heading" aria-level="2">Font, Color &amp; Design &mdash; Quick Reference</div>
-        <div class="law-strip">
-          <div class="law-block">
-            <div class="law-label" role="heading" aria-level="3">Font</div>
-            <div class="law-val" style="font-size:14px;">Sans-serif fonts</div>
-            <div class="law-desc">WCAG does not mandate specific fonts or minimum font sizes for digital documents. However, common accessibility guidelines recommend using sans-serif fonts (e.g., Arial, Calibri, Aptos, Helvetica) for readability, avoiding decorative or cursive fonts, and using 12&ndash;14pt for Word documents and PDFs and 18&ndash;24pt for PowerPoint slides (larger when projected). Headings should be bold and clearly distinct from body text.</div>
-          </div>
-          <div class="law-block">
-            <div class="law-label" role="heading" aria-level="3">Color &amp; Contrast</div>
-            <div class="law-val" style="font-size:14px;">4.5:1 minimum ratio</div>
-            <div class="law-desc">Never use color alone to convey meaning &mdash; e.g., marking a deadline only in red text. Color alone doesn't carry meaning for everyone &mdash; different ways of seeing color, grayscale printing, and low-contrast screens all affect how content reads. Always pair color with bold text or an icon (&#9888;&#65039;). YuJa Panorama and PowerPoint's checker will flag contrast issues automatically.</div>
-          </div>
-          <div class="law-block">
-            <div class="law-label" role="heading" aria-level="3">Universal Design for Learning (UDL)</div>
-            <div class="law-desc">Explore the UDL framework: <a href="https://udlguidelines.cast.org" target="_blank" aria-label="CAST UDL Guidelines website">CAST UDL Guidelines</a> and UCI's own guide at <a href="https://dtei.uci.edu/resources/how-to/accessibility/" target="_blank" aria-label="UCI DTEI Inclusive Teaching page">DTEI Accessibility Teaching Guide</a>.</div>
-          </div>
         </div>
       </div>
 
